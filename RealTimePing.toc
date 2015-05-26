@@ -1,9 +1,9 @@
-## Interface: 40300
+## Interface: 60100
 ## Title: RealTimePing
 ## Notes: Uses SendAddonMessage for a more accurate ping time
 ## Author: Soulsbane
 ## Version: 1.0.0
-##
 
+LibDataBroker-1.1.lua
 SimpleCore.lua
 RealTimePing.lua
