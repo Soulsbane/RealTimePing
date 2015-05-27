@@ -16,9 +16,15 @@ local function SendPing()
 end
 
 function Addon:OnInitialize()
-	self:RegisterSlashCommand("ping")
+	self:EnableDebug(true)
+	self:StartRepeatingTimer(1)
 	RegisterAddonMessagePrefix(MSG_PREFIX)
 	self:RegisterEvent("CHAT_MSG_ADDON")
+	SendPing()
+end
+
+function Addon:OnEnable()
+	self:RegisterSlashCommand("ping")
 end
 
 function Addon:OnSlashCommand(msg)
@@ -30,23 +36,14 @@ function Addon:CHAT_MSG_ADDON(event, prefix, message, channel, sender)
 		local now = GetTime() * 1000
 		local sent = message * 1000
 
-		CurrentPingValue = tostring(Round(now - sent, 0)))
-		self:Print("Pong: " .. CurrentPingValue
+		CurrentPingValue = tostring(Round(now - sent, 0))
+		self:Print("Pong: " .. CurrentPingValue)
 	end
 end
 
-function Addon:OnInitialize()
-	SendPing()
-end
 
-function Addon:OnEnable()
-	self:StartRepeatingTimer(.2, "UpdateText")
-	self:UpdateText()
-end
-
-function Addon:UpdateText()
+function Addon:OnTimer(elapsed, name)
 	UpdateAddOnMemoryUsage()
-
 	self.Feed.text = string_format("%d fps  %d ms %.1f MiB, %s rtp", math_floor(GetFramerate() + 0.5), select(3, GetNetStats()) , self:GetTotalAddonMemory(), CurrentPingValue)
 end
 
