@@ -12,15 +12,16 @@ local function Round(number, decimals)
 end
 
 local function SendPing()
+	--TODO: Should probably add some sort of ID to avoid ping collisions.
 	SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
 end
 
 function Addon:OnInitialize()
 	self:EnableDebug(true)
 	self:StartRepeatingTimer(1)
+	self:StartRepeatingTimer(5, "OnPingTimer")
 	RegisterAddonMessagePrefix(MSG_PREFIX)
 	self:RegisterEvent("CHAT_MSG_ADDON")
-	SendPing()
 end
 
 function Addon:OnEnable()
@@ -41,10 +42,13 @@ function Addon:CHAT_MSG_ADDON(event, prefix, message, channel, sender)
 	end
 end
 
-
 function Addon:OnTimer(elapsed, name)
 	UpdateAddOnMemoryUsage()
 	self.Feed.text = string_format("%d fps  %d ms %.1f MiB, %s rtp", math_floor(GetFramerate() + 0.5), select(3, GetNetStats()) , self:GetTotalAddonMemory(), CurrentPingValue)
+end
+
+function Addon:OnPingTimer(elapsed, name)
+	SendPing()
 end
 
 function Addon:GetTotalAddonMemory()
