@@ -18,7 +18,8 @@ end
 function Addon:OnInitialize()
 	self:EnableDebug(true)
 	self:StartRepeatingTimer(1)
-	--self:StartRepeatingTimer(5, "OnPingTimer")
+	self:StartRepeatingTimer(5, "OnPingTimer")
+
 	RegisterAddonMessagePrefix(MSG_PREFIX)
 	self:RegisterEvent("CHAT_MSG_ADDON")
 end
