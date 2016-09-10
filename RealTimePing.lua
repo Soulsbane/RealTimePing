@@ -1,7 +1,6 @@
 local AddonName, Addon = ...
 local MSG_PREFIX = "RealTimePing"
 local string_format = string.format
-local math_floor = math.floor
 local CurrentPingValue = "0"
 
 Addon.Feed = LibStub("LibDataBroker-1.1"):NewDataObject("RealTimePing", { type = "data source" })
@@ -19,7 +18,7 @@ end
 function Addon:OnInitialize()
 	self:EnableDebug(true)
 	self:StartRepeatingTimer(1)
-	self:StartRepeatingTimer(5, "OnPingTimer")
+	--self:StartRepeatingTimer(5, "OnPingTimer")
 	RegisterAddonMessagePrefix(MSG_PREFIX)
 	self:RegisterEvent("CHAT_MSG_ADDON")
 end
@@ -38,29 +37,16 @@ function Addon:CHAT_MSG_ADDON(event, prefix, message, channel, sender)
 		local sent = message * 1000
 
 		CurrentPingValue = tostring(Round(now - sent, 0))
-		self:Print("Pong: " .. CurrentPingValue)
+		--self:Print("Pong: " .. CurrentPingValue) --Add option later to re-enable
 	end
 end
 
 function Addon:OnTimer(elapsed, name)
-	UpdateAddOnMemoryUsage()
-	self.Feed.text = string_format("%d fps  %d ms %.1f MiB, %s rtp", math_floor(GetFramerate() + 0.5), select(3, GetNetStats()) , self:GetTotalAddonMemory(), CurrentPingValue)
+	self.Feed.text = string_format("%d ms %s rtp", select(3, GetNetStats()) , CurrentPingValue)
 end
 
 function Addon:OnPingTimer(elapsed, name)
 	SendPing()
-end
-
-function Addon:GetTotalAddonMemory()
-	local numOfAddons = GetNumAddOns()
-	local total = 0
-
-	for i = 1, numOfAddons do
-		local mem = GetAddOnMemoryUsage(i)
-		total = total + mem
-	end
-
-	return total / 1024
 end
 
 function Addon.Feed.OnClick(self, button)
