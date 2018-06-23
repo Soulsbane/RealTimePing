@@ -2,6 +2,7 @@ local AddonName, Addon = ...
 local MSG_PREFIX = "RealTimePing"
 local string_format = string.format
 local CurrentPingValue = "0"
+local WOW_API_VERSION = select(4, GetBuildInfo())
 
 Addon.Feed = LibStub("LibDataBroker-1.1"):NewDataObject("RealTimePing", { type = "data source" })
 Addon.Feed.icon = [[Interface\Addons\RealTimePing\computer.tga]]
@@ -12,7 +13,11 @@ end
 
 local function SendPing()
 	--TODO: Should probably add some sort of ID to avoid ping collisions.
-	SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
+	if(WOW_API_VERSION >= 80000)
+		C_ChatInfo.SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
+	else
+		SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
+	end
 end
 
 function Addon:OnInitialize()
@@ -20,7 +25,12 @@ function Addon:OnInitialize()
 	self:StartRepeatingTimer(1)
 	self:StartRepeatingTimer(5, "OnPingTimer")
 
-	RegisterAddonMessagePrefix(MSG_PREFIX)
+	if(WOW_API_VERSION >= 80000)
+		C_ChatInfo.RegisterAddonMessagePrefix(MSG_PREFIX)
+		else
+		RegisterAddonMessagePrefix(MSG_PREFIX)
+	end
+
 	self:RegisterEvent("CHAT_MSG_ADDON")
 end
 
