@@ -13,7 +13,7 @@ end
 
 local function SendPing()
 	--TODO: Should probably add some sort of ID to avoid ping collisions.
-	if(WOW_API_VERSION >= 80000)
+	if(WOW_API_VERSION >= 80000) then
 		C_ChatInfo.SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
 	else
 		SendAddonMessage(MSG_PREFIX, tostring(GetTime()), "WHISPER", UnitName("player"))
@@ -25,9 +25,9 @@ function Addon:OnInitialize()
 	self:StartRepeatingTimer(1)
 	self:StartRepeatingTimer(5, "OnPingTimer")
 
-	if(WOW_API_VERSION >= 80000)
+	if(WOW_API_VERSION >= 80000) then
 		C_ChatInfo.RegisterAddonMessagePrefix(MSG_PREFIX)
-		else
+	else
 		RegisterAddonMessagePrefix(MSG_PREFIX)
 	end
 
