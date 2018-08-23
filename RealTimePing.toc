@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 80000
 ## Title: RealTimePing
 ## Notes: Uses SendAddonMessage for a more accurate ping time
 ## Author: Soulsbane
